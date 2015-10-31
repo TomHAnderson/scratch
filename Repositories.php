@@ -5,7 +5,7 @@ use Db\Entity;
 
 class TeamRepository extends EntityRepository
 {
-    public function getMemberCount(Entity\Team $team)
+    public oMemberCount(Entity\Team $team)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
 
@@ -47,3 +47,24 @@ class TeamEventSubscriber implements EventSubscriber
             ;
     }
 }
+
+
+
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Db\Entity;
+
+class ReportController extends AbstractActionController
+{
+    public function updateTeamNameAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+
+        $team = $objectManager->getRepository('Blitzy\Entity\Team')->find($this->params()->fromRoute('team_id'));
+
+        $team->setTeamName($objectManager->getRepository('Blitzy\Entity\Team')->calculateTeamName($team));
+
+        $objectManager->flush();
+    }
+}
+
