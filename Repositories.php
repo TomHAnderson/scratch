@@ -17,3 +17,33 @@ class TeamRepository extends EntityRepository
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
+
+
+namespace Application\EventSubscriber;
+
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Events;
+use Db\Entity;
+
+class TeamEventSubscriber implements EventSubscriber
+{
+    public function getSubscribedEvents()
+    {
+        return array(
+            Events::prePersist,
+        );
+    }
+
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        if (! $args->getObject() instanceof Entity\Team) {
+            return;
+        }
+
+        $args->getObjectManager()
+            ->getRepository('Db\Entity\Schedule')
+            ->updateTeam($args->getObject())
+            ;
+    }
+}
