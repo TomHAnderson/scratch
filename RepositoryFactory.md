@@ -1,4 +1,4 @@
-<?php
+```php
 
 return array(
     'doctrine' => array(
@@ -63,3 +63,5 @@ final class RepositoryFactory implements
         return $repository;
     }
 }
+
+```
